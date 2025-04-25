@@ -15,6 +15,15 @@ jobs:
     defaults:
       run:
         working-directory: ./server
+    strategy:
+      fail-fast: true
+      matrix:
+        npm_command:
+          [
+            "run test:ci",
+            "run lint",
+            "audit --production --audit-level=critical",
+          ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,9 +35,6 @@ jobs:
       # necessite npm install avant pour création du package-lock
       - name: Install dependencies
         run: npm ci
-      - name: Verify code
-        run: npm run lint
-      - name: Verify vulnerabilities
-        run: npm audit --production --audit-level=critical
-      - name: Run tests
-        run: npm run test:ci
+      - name: exécute les tests
+        run: |
+          npm ${{ matrix.npm_command }}
