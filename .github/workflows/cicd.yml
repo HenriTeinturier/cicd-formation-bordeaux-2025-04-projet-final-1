@@ -1,0 +1,34 @@
+name: CI/CD workflow
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-tests-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install node
+        uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+          cache-dependency-path: "./server/package-lock.json"
+      # necessite npm install avant pour création du package-lock
+      - name: Install dependencies
+        run: npm ci
+      - name: Verify code
+        run: npm run lint
+      - name: Verify vulnerabilities
+        run: npm audit --production --audit-level=critical
+      - name: Run tests
+        run: npm run test:ci
