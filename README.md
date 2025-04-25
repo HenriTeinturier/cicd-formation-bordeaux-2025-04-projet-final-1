@@ -1,0 +1,1 @@
+![Statut](https://github.com/HenriTeinturier/cicd-formation-bordeaux-2025-04-projet-final-1/actions/workflows/cicd.yml/badge.svg)
